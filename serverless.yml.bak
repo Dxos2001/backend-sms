@@ -1,0 +1,57 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: ldxos
+# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+app: sms-sinapsis-backend
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: backend-api
+frameworkVersion: '3'
+useDotenv: true          # carga variables de entorno desde .env
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+  stage: ${opt:stage, 'prod'}
+  httpApi:
+    cors: true
+  environment:
+    NODE_ENV: production
+    DB_HOST: ${ssm:/sms/DB_HOST}
+    DB_PORT: ${ssm:/sms/DB_PORT, '3306'}
+    DB_USER: ${ssm:/sms/DB_USER~true}
+    DB_PASS: ${ssm:/sms/DB_PASS~true}
+    DB_NAME: ${ssm:/sms/DB_NAME}
+    DB_SSL:  ${ssm:/sms/DB_SSL, 'true'}
+
+functions:
+  api:
+    handler: handler.handler          # archivo.export
+    memorySize: 256
+    timeout: 30
+    events:
+      - httpApi:
+          method: ANY
+          path: /
+      - httpApi:
+          method: ANY
+          path: /{proxy+}
+
+plugins:
+  - serverless-offline
+
+custom:
+  serverless-offline:
+    noPrependStageInUrl: true
+    httpPort: 3000          # usa 3000 para no tocar el frontend
+  dotenv:
+    logging: false
+
+package:
+  patterns:
+    - app.js
+    - server.js
+    - handler.js
+    - swagger_output.json
+    - src/**               # tu código
+    - build/entities/**    # entidades compiladas
+    - node_modules/**      # dependencias

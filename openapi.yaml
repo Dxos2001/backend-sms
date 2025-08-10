@@ -1,0 +1,49 @@
+openapi: 3.1.0
+info:
+  title: SMS Campaign API
+  version: 1.0.0
+servers:
+  - url: /
+paths:
+  /campaigns:
+    get:
+      summary: Listar campañas
+      responses:
+        '200': { description: OK }
+    post:
+      summary: Crear campaña
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, message, recipients]
+              properties:
+                name: { type: string }
+                message: { type: string }
+                recipients:
+                  type: array
+                  items: { type: string }
+      responses:
+        '201': { description: Creada }
+  /campaigns/{id}/dispatch:
+    post:
+      summary: Disparar campaña
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: OK }
+  /campaigns/{id}/messages:
+    get:
+      summary: Listar mensajes
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: OK }

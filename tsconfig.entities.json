@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "rootDir": "src/entities",
+    "outDir": "build/entities",
+
+    "target": "ES2019",
+    "module": "commonjs",
+    "moduleResolution": "node",
+
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "useDefineForClassFields": false,
+
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+
+    "declaration": false,
+    "sourceMap": false
+  },
+  "include": ["src/entities/**/*.ts"]
+}

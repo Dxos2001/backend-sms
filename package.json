@@ -1,0 +1,43 @@
+{
+  "name": "backend-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build:entities": "tsc -p tsconfig.entities.json",
+    "dev": "npm run build:entities && nodemon server.js",
+    "start": "node server.js",
+    "offline": "npm run build:entities && serverless offline",
+    "typeorm:run": "node -e \"require('./src/data-source').getDataSource().then(ds=>ds.runMigrations().then(()=>process.exit(0)))\"",
+    "typeorm:revert": "node -e \"require('./src/data-source').getDataSource().then(ds=>ds.undoLastMigration().then(()=>process.exit(0)))\"",
+    "swagger": "node swagger.js",
+    "deploy": "npm run build:entities && serverless deploy"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@vendia/serverless-express": "^4.12.6",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "mysql2": "^3.14.3",
+    "reflect-metadata": "^0.2.2",
+    "serverless-http": "^3.2.0",
+    "typeorm": "^0.3.25"
+  },
+  "devDependencies": {
+    "@types/node": "^24.2.1",
+    "nodemon": "^3.1.10",
+    "serverless": "^3.40.0",
+    "serverless-offline": "^14.4.0",
+    "swagger-autogen": "^2.23.7",
+    "swagger-ui-express": "^5.0.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  },
+  "overrides": {
+    "serverless-offline": {
+      "serverless": "$serverless"
+    }
+  }
+}

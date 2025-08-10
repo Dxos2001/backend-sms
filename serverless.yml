@@ -1,0 +1,56 @@
+org: ldxos
+app: sms-sinapsis-backend
+service: backend-api
+frameworkVersion: '3'
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+  stage: ${opt:stage, 'prod'}
+  httpApi:
+    payload: '2.0'     # <-- IMPORTANTE para que req.body funcione con offline
+    cors: true
+  environment:
+    NODE_ENV: production
+    DB_HOST: ${ssm:/sms/DB_HOST}
+    DB_PORT: ${ssm:/sms/DB_PORT}
+    DB_USER: ${ssm:/sms/DB_USER}
+    DB_PASS: ${ssm:/sms/DB_PASS}
+    DB_NAME: ${ssm:/sms/DB_NAME}
+    DB_SSL: ${ssm:/sms/DB_SSL}
+
+functions:
+  api:
+    handler: handler.handler
+    memorySize: 256
+    timeout: 30
+    events:
+      - httpApi:
+          method: ANY
+          path: /
+      - httpApi:
+          method: ANY
+          path: /{proxy+}
+
+plugins:
+  - serverless-offline
+
+custom:
+  serverless-offline:
+    noPrependStageInUrl: true
+    httpPort: 3000
+    host: 127.0.0.1
+  dotenv:
+    logging: false
+
+package:
+  patterns:
+    - app.js
+    - server.js
+    - handler.js
+    - swagger_output.json
+    - src/**
+    - build/entities/**
+    - node_modules/**
