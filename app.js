@@ -28,6 +28,19 @@ app.use('/messages', messagesRoutes);
 app.use('/customers', customersRoutes);
 app.use('/users', userRoutes);
 
+// 👇 Compat con serverless-offline / API Gateway HTTP API (payload v2)
+app.use((req, _res, next) => {
+  // serverless-http expone el evento aquí:
+  const ev = req.apiGateway?.event || req.event;
+  if ((!req.body || Object.keys(req.body).length === 0) && ev?.body) {
+    try {
+      const raw = ev.isBase64Encoded ? Buffer.from(ev.body, 'base64').toString('utf8') : ev.body;
+      req.body = typeof raw === 'string' ? JSON.parse(raw) : raw;
+    } catch { /* ignorar si no es JSON */ }
+  }
+  next();
+});
+
 app.use(errorHandler);
 
 module.exports = app; // 👈 importante

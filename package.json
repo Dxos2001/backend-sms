@@ -23,7 +23,8 @@
     "mysql2": "^3.14.3",
     "reflect-metadata": "^0.2.2",
     "serverless-http": "^3.2.0",
-    "typeorm": "^0.3.25"
+    "typeorm": "^0.3.25",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "@types/node": "^24.2.1",
